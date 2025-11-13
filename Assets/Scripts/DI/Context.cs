@@ -12,14 +12,6 @@ namespace HSD.DI
     {
         [SerializeField]
         List<Installer> _installers = new List<Installer>();
-        [SerializeField]
-        int count = 0;
-
-        [Inject]
-        public void Init(int _count)
-        {
-            count = _count;
-        }
 
         protected virtual void Awake()
         {

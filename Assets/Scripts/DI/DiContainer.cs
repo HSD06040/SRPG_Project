@@ -8,8 +8,8 @@ namespace HSD.DI
 {
     public class DiContainer
     {
-        readonly Dictionary<Type, object> _singletons = new();
-        readonly Dictionary<Type, BindInfo> _bindInfos = new();
+        readonly static Dictionary<Type, object> _singletons = new();
+        readonly static Dictionary<Type, BindInfo> _bindInfos = new();
         readonly List<BindInfo> _bindings = new List<BindInfo>();
 
         const BindingFlags k_bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -43,15 +43,14 @@ namespace HSD.DI
 
         void CreateSingleInstance(BindInfo info)
         {
+            if (_singletons.TryGetValue(info.ContractType, out var oldInstance))
+            {
+                if (oldInstance != null)
+                    return;
+            }
+
             if (typeof(MonoBehaviour).IsAssignableFrom(info.ToType))
             {
-                if (_singletons.TryGetValue(info.ContractType, out var oldInstance))
-                {
-                    if (oldInstance is MonoBehaviour oldMono)
-                    {
-                        UnityEngine.Object.Destroy(oldMono.gameObject);
-                    }
-                }
 
                 Type componentType = info.ToType;
                 GameObject obj = new GameObject($"[Singleton] {componentType.Name}");
