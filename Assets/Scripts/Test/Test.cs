@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using HSD.DI;
 using UnityEngine;
 
@@ -10,6 +11,14 @@ public class Test : MonoBehaviour
 
     EventBinding<UnitEvent> eventBinding;
     EventBinding<TestEvent> testEventBinding;
+
+    [SerializedDictionary("string, int")]
+    public SerializedDictionary<string, int> keyValuePairs = new();
+
+    private void Start()
+    {
+        keyValuePairs.Add("d", 4);
+    }
 
     private void Awake()
     {

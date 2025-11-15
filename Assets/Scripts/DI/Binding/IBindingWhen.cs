@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace HSD.DI
 {
@@ -17,6 +18,8 @@ namespace HSD.DI
                 ToType = type,
                 Scope = ScopeTypes.Transient
             };
+
+            _container.ReBinding(_info);
         }
 
         public BindingFrom AsSingle()

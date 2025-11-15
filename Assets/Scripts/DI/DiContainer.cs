@@ -37,10 +37,16 @@ namespace HSD.DI
             {
                 CreateSingleInstance(info);
             }
+            else 
+            {
+                if(typeof(MonoBehaviour).IsAssignableFrom(info.ToType))
+                {
+
+                }
+            }
 
             _bindInfos[info.ContractType] = info;
         }
-
         void CreateSingleInstance(BindInfo info)
         {
             if (_singletons.TryGetValue(info.ContractType, out var oldInstance))
@@ -51,9 +57,15 @@ namespace HSD.DI
 
             if (typeof(MonoBehaviour).IsAssignableFrom(info.ToType))
             {
-
                 Type componentType = info.ToType;
-                GameObject obj = new GameObject($"[Singleton] {componentType.Name}");
+
+                GameObject obj = null;
+
+                if (info.DontDestory)
+                    obj = new GameObject($"[Singleton] {componentType.Name}");                 
+                else
+                    obj = new GameObject($"[Single] {componentType.Name}");
+
                 MonoBehaviour instance = (MonoBehaviour)obj.AddComponent(componentType);
 
                 if (info.DontDestory)
@@ -69,7 +81,6 @@ namespace HSD.DI
                 _singletons[info.ContractType] = newInstance;
             }
         }
-
         public object Resolve(Type contractType)
         {
             if (_singletons.TryGetValue(contractType, out var instance))
@@ -107,7 +118,6 @@ namespace HSD.DI
 
             return null;
         }
-
         public void ReBinding(BindInfo bindingFrom)
         {
             int index = _bindings.FindIndex(b => b == bindingFrom);
