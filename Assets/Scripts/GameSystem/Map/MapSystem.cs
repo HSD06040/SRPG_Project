@@ -4,12 +4,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using Events.MapEvent;
 using Events.UnitEvent;
+using InputEvent;
 
 [Serializable]
 public class MapSystem : IDisposable
 {
-    private readonly Dictionary<IGameUnit, List<ITile>> moveableTileCache = new();
-    private readonly EventBinding<UnitMoveCommittedEvent> commitBinding;
+    readonly Dictionary<IGameUnit, List<ITile>> moveableTileCache = new();
+
+#region Events
+    readonly EventBinding<UnitMoveCommittedEvent> commitBinding;
+    readonly EventBinding<UnitSelectEvent> selectBinding;
+
+    private void EventBinding()
+    {
+        commitBinding.Add(OnUnitMoveCommitted);
+        EventBus<UnitMoveCommittedEvent>.Register(commitBinding);
+
+        selectBinding.Add(VisibleTile);
+        EventBus<UnitSelectEvent>.Register(selectBinding);
+    }
+
+    private void VisibleTile(UnitSelectEvent unitSelectEvent)
+    {
+        VisibleTile(unitSelectEvent.Unit);
+    }
+    #endregion
 
     [SerializedDictionary("좌표", "타일")]
     readonly SerializedDictionary<Vector2Int, ITile> tileMap = new();
@@ -17,8 +36,10 @@ public class MapSystem : IDisposable
     public MapSystem()
     {
         commitBinding = new EventBinding<UnitMoveCommittedEvent>();
+        selectBinding = new EventBinding<UnitSelectEvent>();
+
         EventBinding();
-    }
+    }    
 
     public void MapGenerate(MapData mapData)
     {
@@ -42,12 +63,6 @@ public class MapSystem : IDisposable
                 tileMap.Add(tilePos, tile);
             }
         }
-    }
-
-    private void EventBinding()
-    {
-        commitBinding.Add(OnUnitMoveCommitted);
-        EventBus<UnitMoveCommittedEvent>.Register(commitBinding);
     }
 
     public List<ITile> GetMoveableTiles(IGameUnit unit)
@@ -126,15 +141,13 @@ public class MapSystem : IDisposable
         return moveableTiles;
     }
 
-    public List<ITile> GetVisibleTile(IGameUnit unit)
+    public void VisibleTile(IGameUnit unit)
     {
         EventBus<TileHighlightClearEvent>.Raise(new TileHighlightClearEvent());
 
         List<ITile> tiles = GetMoveableTiles(unit);
 
         EventBus<TileHighlightRequestedEvent>.Raise(new TileHighlightRequestedEvent(tiles));
-
-        return tiles;
     }
 
     private bool CanMoveTo(ITile tile, IGameUnit unit)
@@ -149,7 +162,7 @@ public class MapSystem : IDisposable
 
         return true;
     }
-
+    
     public void Dispose()
     {
         EventBus<UnitMoveCommittedEvent>.Deregister(commitBinding);

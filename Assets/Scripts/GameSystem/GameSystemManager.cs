@@ -25,17 +25,17 @@ public class GameSystemManager : MonoBehaviour
     }
 
     #region Test
-    
+    [SerializeField] MapData data;
+    [ContextMenu("Map G")]
+    private void MapG()
+    {
+        mapSystem.MapGenerate(data);
+    }
     #endregion
 
     public void Init()
     {
         unitMap = new();
-    }
-
-    public void CheckCanMove(IGameUnit unit)
-    {
-        mapSystem.GetVisibleTile(unit);
     }
 
     private void OnDestroy()
