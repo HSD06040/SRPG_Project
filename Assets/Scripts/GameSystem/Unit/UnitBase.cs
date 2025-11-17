@@ -1,32 +1,17 @@
 using UnityEngine;
-
-public struct UnitTilePosEvent : IEvent
-{
-    public Vector2Int tilePos;
-}
+using Events.UnitEvent;
+using UnitEventBinding = EventBinding<Events.UnitEvent.UnitEvent>;
 
 public abstract class UnitBase : MonoBehaviour, IGameUnit
 {
-    [field:SerializeField] public Vector2Int CurPos { get; set; }
+    public Vector2Int CurPos { get => _curPos; set { _curPos = value; EventBus<UnitEvent>.Raise(new UnitEvent(this)); } }
+    [SerializeField] Vector2Int _curPos;
     [field:SerializeField] public UnitData UnitData { get; set; }    
 
-    public static EventBinding<UnitTilePosEvent> unitPosEvent;
-    protected GameSystemManager gameSystemManager;
+    public static UnitEventBinding UnitEvent = new UnitEventBinding();
 
-    public void Init(GameSystemManager gameSystemManager)
+    public void MoveVisual(Vector2Int tilePos)
     {
-        this.gameSystemManager = gameSystemManager;
-        unitPosEvent = new EventBinding<UnitTilePosEvent>(CurrentPositionUpdate);
-    }
-
-    [ContextMenu("Test")]
-    public void CheckCanMoveTile()
-    {
-        gameSystemManager.CheckCanMove(this);
-    }
-
-    private void CurrentPositionUpdate(UnitTilePosEvent tilePosEvent)
-    {
-        CurPos = tilePosEvent.tilePos;
+        // 움직임 알고리즘
     }
 }

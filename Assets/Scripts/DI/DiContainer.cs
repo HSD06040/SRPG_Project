@@ -10,6 +10,7 @@ namespace HSD.DI
     {
         readonly static Dictionary<Type, object> _singletons = new();
         readonly static Dictionary<Type, BindInfo> _bindInfos = new();
+        readonly Dictionary<Type, object> _singles = new();
         readonly List<BindInfo> _bindings = new List<BindInfo>();
 
         const BindingFlags k_bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -78,14 +79,23 @@ namespace HSD.DI
             else
             {
                 var newInstance = CreateInstanceWithArguments(info.ToType, info.Arguments);
-                _singletons[info.ContractType] = newInstance;
+
+                if (info.DontDestory)
+                    _singletons[info.ContractType] = newInstance;
+                else
+                    _singles[info.ContractType] = newInstance;
             }
         }
         public object Resolve(Type contractType)
         {
             if (_singletons.TryGetValue(contractType, out var instance))
-            {
+            {                
                 return instance;
+            }
+
+            if (_singles.TryGetValue(contractType, out var instance2))
+            {
+                return instance2;
             }
 
             if (_bindInfos.TryGetValue(contractType, out var info))

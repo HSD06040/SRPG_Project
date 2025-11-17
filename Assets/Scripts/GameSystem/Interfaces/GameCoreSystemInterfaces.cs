@@ -18,4 +18,11 @@ public interface IGameUnit
 {
     Vector2Int CurPos { get; set; }
     UnitData UnitData { get; set; }
+    
+    void MoveVisual(Vector2Int tilePos);
+}
+
+public interface IUndoableAction
+{
+    void Undo();
 }

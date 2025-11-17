@@ -2,24 +2,28 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Events.MapEvent;
+using Events.UnitEvent;
 
 [Serializable]
-public class MapSystem
+public class MapSystem : IDisposable
 {
+    private readonly Dictionary<IGameUnit, List<ITile>> moveableTileCache = new();
+    private readonly EventBinding<UnitMoveCommittedEvent> commitBinding;
+
     [SerializedDictionary("좌표", "타일")]
-    readonly SerializedDictionary<Vector2Int, ITile> tileMap;
+    readonly SerializedDictionary<Vector2Int, ITile> tileMap = new();
 
-    [SerializeField]
-    readonly List<ITile> hightlightTiles = new();
-
-    public MapSystem() 
+    public MapSystem()
     {
-        tileMap = new();        
+        commitBinding = new EventBinding<UnitMoveCommittedEvent>();
+        EventBinding();
     }
 
     public void MapGenerate(MapData mapData)
     {
         Transform tileParent = new GameObject("MapTiles").transform;
+        GameObject tilePrefab = Resources.Load<GameObject>("Tile");
 
         int col = mapData.MapSize.x;
         int row = mapData.MapSize.y;
@@ -31,41 +35,43 @@ public class MapSystem
                 Vector2Int tilePos = new Vector2Int(y, x);
 
                 ITile tile = UnityEngine.Object.Instantiate
-                    (Resources.Load<GameObject>("Tile"), new Vector3(tilePos.x, 0, tilePos.y),
+                    (tilePrefab, new Vector3(tilePos.x, 0, tilePos.y),
                     Quaternion.identity, tileParent).GetComponent<ITile>();
 
                 tile.SetTilePos(tilePos);
-                Debug.Log(tilePos);
                 tileMap.Add(tilePos, tile);
             }
         }
     }
 
-    public void HightlightTiles(List<ITile> tiles)
+    private void EventBinding()
     {
-        foreach (ITile tile in tiles)
-        {
-            HighlightTile(tile);
-        }
-    }
-    public void DeHighlightTiles()
-    {
-        if(hightlightTiles == null || hightlightTiles.Count == 0)
-
-        foreach (ITile tile in hightlightTiles)
-        {
-            if (tile == null) continue;
-
-            tile.DeHighlightTile();
-        }
-
-        hightlightTiles.Clear();
+        commitBinding.Add(OnUnitMoveCommitted);
+        EventBus<UnitMoveCommittedEvent>.Register(commitBinding);
     }
 
     public List<ITile> GetMoveableTiles(IGameUnit unit)
     {
-        DeHighlightTiles();
+        if (moveableTileCache.TryGetValue(unit, out List<ITile> cachedTiles))
+        {
+            return cachedTiles;
+        }
 
+        List<ITile> calculatedTiles = CalculateMoveableTiles(unit);
+
+        moveableTileCache[unit] = calculatedTiles;
+
+        return calculatedTiles;
+    }
+
+    private void OnUnitMoveCommitted(UnitMoveCommittedEvent evt)
+    {
+        IGameUnit unit = evt.ActionData.Unit;
+        moveableTileCache[unit] = CalculateMoveableTiles(unit);        
+    }
+
+    public List<ITile> CalculateMoveableTiles(IGameUnit unit)
+    {
         if (!tileMap.TryGetValue(unit.CurPos, out ITile startTile))
         {
             Debug.LogError("유닛의 현재 위치에 타일이 없습니다.");
@@ -122,15 +128,13 @@ public class MapSystem
 
     public List<ITile> GetVisibleTile(IGameUnit unit)
     {
-        List<ITile> tiles = GetMoveableTiles(unit);
-        HightlightTiles(tiles);
-        return tiles;
-    }
+        EventBus<TileHighlightClearEvent>.Raise(new TileHighlightClearEvent());
 
-    private void HighlightTile(ITile tile)
-    {
-        tile.HighlightTile();
-        hightlightTiles.Add(tile);
+        List<ITile> tiles = GetMoveableTiles(unit);
+
+        EventBus<TileHighlightRequestedEvent>.Raise(new TileHighlightRequestedEvent(tiles));
+
+        return tiles;
     }
 
     private bool CanMoveTo(ITile tile, IGameUnit unit)
@@ -144,5 +148,10 @@ public class MapSystem
         }  
 
         return true;
-    }        
+    }
+
+    public void Dispose()
+    {
+        EventBus<UnitMoveCommittedEvent>.Deregister(commitBinding);
+    }
 }

@@ -1,42 +1,48 @@
 using AYellowpaper.SerializedCollections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameSystemManager : MonoBehaviour
 {
-    [SerializeField]
-    private MapSystem mapSystem {  get; set; }
+    #region Systems
+    private MapSystem mapSystem;
+    private MapVisualSystem mapVisualSystem;
+    private GameSystem gameSystem;
+    private GameUndoSystem undoSystem;
+    #endregion
 
     [SerializedDictionary("ÁÂÇ¥", "À¯´Ö")]
     private SerializedDictionary<Vector2Int, IGameUnit> unitMap;
 
     private void Awake()
     {
+        undoSystem = new GameUndoSystem();
+        mapSystem = new MapSystem();
+        mapVisualSystem = new MapVisualSystem();
+        gameSystem = new GameSystem(mapSystem);
+
         Init();
     }
+
+    #region Test
+    
+    #endregion
 
     public void Init()
     {
         unitMap = new();
-        this.mapSystem = mapSystem = new();
     }
-
-#region Test
-    [SerializeField] MapData testMapData;
-    [ContextMenu("MapGenerate")]
-    private void TestMapGenerate()
-    {
-        mapSystem.MapGenerate(testMapData);
-    }
-
-    [ContextMenu("DeHightlight Tile")]
-    private void DeHieghtlightTile()
-    {
-        mapSystem.DeHighlightTiles();
-    }
-#endregion
 
     public void CheckCanMove(IGameUnit unit)
-    {       
+    {
         mapSystem.GetVisibleTile(unit);
+    }
+
+    private void OnDestroy()
+    {
+        undoSystem.Dispose();
+        mapSystem.Dispose();
+        mapVisualSystem.Dispose();
+        gameSystem.Dispose();
     }
 }

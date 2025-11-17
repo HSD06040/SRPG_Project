@@ -25,6 +25,7 @@ public class EventBinding<T> : IEventBinding<T> where T : IEvent
 
     public EventBinding(Action<T> onEvent) => this.onEvent = onEvent;    
     public EventBinding(Action onEventNoArgs) => this.onEventNoArgs = onEventNoArgs;
+    public EventBinding() { }
 
     public void Add(Action onEvent) => onEventNoArgs += onEvent;
     public void Remove(Action onEvent) => onEventNoArgs -= onEvent;
