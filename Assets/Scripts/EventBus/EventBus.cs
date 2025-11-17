@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public static class EventBus<T> where T : IEvent
 {
-    static readonly HashSet<IEventBinding<T>> bindings = new HashSet<IEventBinding<T>>();    
+    static readonly HashSet<IEventBinding<T>> bindings = new HashSet<IEventBinding<T>>();
 
     public static void Register(EventBinding<T> binding)
     {
@@ -16,7 +14,7 @@ public static class EventBus<T> where T : IEvent
             EventBusMonitor.OnRegister(typeof(T), del);
         }
 #endif
-    }    
+    }
 
     public static void Deregister(EventBinding<T> binding)
     {

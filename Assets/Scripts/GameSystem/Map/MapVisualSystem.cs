@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using Events.MapEvent;
-using Events.UnitEvent;
 
 public class MapVisualSystem : IDisposable
 {
     private readonly List<Tile> hightlightTiles = new();
-    
-#region Events
+
+    #region Events
     private readonly EventBinding<TileHighlightRequestedEvent> highlightBinding;
     private readonly EventBinding<TileHighlightClearEvent> clearBinding;
     private readonly EventBinding<UnitMoveCommittedEvent> commitBinding;
 
     private void EventBinding()
-    {    
+    {
         highlightBinding.Add(OnHighlightRequest);
         EventBus<TileHighlightRequestedEvent>.Register(highlightBinding);
-     
+
         clearBinding.Add(ClearVisuals);
         EventBus<TileHighlightClearEvent>.Register(clearBinding);
-        
+
         commitBinding.Add(ClearVisuals);
         EventBus<UnitMoveCommittedEvent>.Register(commitBinding);
     }
-#endregion
+    #endregion
 
     public MapVisualSystem()
     {

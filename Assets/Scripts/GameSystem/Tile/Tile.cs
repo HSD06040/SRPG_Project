@@ -17,7 +17,7 @@ public class Tile : MonoBehaviour, ITile
     public void DeHighlightTile()
     {
         _view.SetActive(false);
-    }    
+    }
 
-    public void SetTilePos(Vector2Int pos) => Pos = pos;    
+    public void SetTilePos(Vector2Int pos) => Pos = pos;
 }

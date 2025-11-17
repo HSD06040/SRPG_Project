@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class MouseClickInputController : RayController
@@ -11,7 +10,7 @@ public class MouseClickInputController : RayController
     {
         Ray ray = data.cam.ScreenPointToRay(screenPosition);
 
-        RaycastHit raycastHit;        
+        RaycastHit raycastHit;
 
         bool isHit = Physics.Raycast(
             ray,

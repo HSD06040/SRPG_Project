@@ -1,42 +1,46 @@
-﻿using Events.InputEvent;
-
+﻿
 public class PreviewSystem
 {
-    public IGameUnit SelectUnit { get; private set; }
-    public Tile SelectTile { get; private set; }
+    public IGameUnit SelectedUnit { get; private set; }
+    public ITile SelectedTile { get; private set; }
 
-#region Events
+    #region Events
     readonly EventBinding<TileSelectEvent> tileSelectBinding;
     readonly EventBinding<UnitSelectEvent> unitSelectBinding;
 
     private void EventBinding()
-    {        
-        tileSelectBinding.Add();
+    {
+        tileSelectBinding.Add(SelectTile);
         EventBus<TileSelectEvent>.Register(tileSelectBinding);
 
-        unitSelectBinding.Add();
+        unitSelectBinding.Add(SelectUnit);
         EventBus<UnitSelectEvent>.Register(unitSelectBinding);
     }
-#endregion
+
+    void SelectTile(TileSelectEvent selectEvent) => SelectedTile = selectEvent.Tile;
+    void SelectUnit(UnitSelectEvent selectEvent) => SelectedUnit = selectEvent.Unit;
+    #endregion
 
     public PreviewSystem()
     {
         tileSelectBinding = new EventBinding<TileSelectEvent>();
         unitSelectBinding = new EventBinding<UnitSelectEvent>();
+
+        EventBinding();
     }
 
-    public void UnitSelect(IGameUnit unit) => SelectUnit = unit;
-    public void TileSelect(Tile tile) => SelectTile = tile;
+    public void UnitSelect(IGameUnit unit) => SelectedUnit = unit;
+    public void TileSelect(Tile tile) => SelectedTile = tile;
 
     public void PreviewMove()
     {
-        SelectUnit.MoveVisual(SelectTile.Pos);
+        SelectedUnit.MoveVisual(SelectedTile.Pos);
     }
 
     public void CancelPreview()
     {
-        SelectUnit.MoveVisual(SelectUnit.CurPos);
-        SelectUnit = null;
-        SelectTile = null;
+        SelectedUnit.MoveVisual(SelectedUnit.CurPos);
+        SelectedUnit = null;
+        SelectedTile = null;
     }
 }

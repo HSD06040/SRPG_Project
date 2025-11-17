@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 [Serializable]
 public class StatData
@@ -10,7 +9,7 @@ public class StatData
     public float MagicPower;
     public float PhysicalDefense;
     public float MagicResistance;
-    
+
     /// <summary>
     /// 움직이는 횟수
     /// </summary>
@@ -19,5 +18,5 @@ public class StatData
     /// <summary>
     /// 회피율
     /// </summary>
-    public float Evasion;    
+    public float Evasion;
 }

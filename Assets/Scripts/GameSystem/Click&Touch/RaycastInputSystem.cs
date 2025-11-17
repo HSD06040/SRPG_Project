@@ -1,5 +1,3 @@
-using Events.MapEvent;
-using InputEvent;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,7 +14,7 @@ public class RaycastInputSystem : MonoBehaviour
 
     private void Awake()
     {
-        RayControllerData rayControllerData = new RayControllerData(Camera.main, Hit, maxDistance, filterMask, triggerInteraction, Cancel);        
+        RayControllerData rayControllerData = new RayControllerData(Camera.main, Hit, maxDistance, filterMask, triggerInteraction, Cancel);
 
 #if UNITY_STANDALONE_WIN
         controller = new MouseClickInputController(rayControllerData);

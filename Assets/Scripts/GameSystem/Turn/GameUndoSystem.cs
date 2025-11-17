@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Events.UnitEvent;
 
 public class GameUndoSystem : IDisposable
 {
@@ -36,9 +35,9 @@ public class GameUndoSystem : IDisposable
 
     public void UndoAll()
     {
-        for(int i = 0; i < turnActions.Count; i++)
+        for (int i = 0; i < turnActions.Count; i++)
         {
-            if(turnActions.TryPop(out IUndoableAction action))
+            if (turnActions.TryPop(out IUndoableAction action))
             {
                 action.Undo();
             }

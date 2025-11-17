@@ -10,7 +10,7 @@ public class EventBinding<T> : IEventBinding<T> where T : IEvent
 {
     Action<T> onEvent = null;
     Action onEventNoArgs = null;
-    
+
     Action<T> IEventBinding<T>.OnEvent
     {
         get => onEvent;
@@ -23,7 +23,7 @@ public class EventBinding<T> : IEventBinding<T> where T : IEvent
         set => onEventNoArgs = value;
     }
 
-    public EventBinding(Action<T> onEvent) => this.onEvent = onEvent;    
+    public EventBinding(Action<T> onEvent) => this.onEvent = onEvent;
     public EventBinding(Action onEventNoArgs) => this.onEventNoArgs = onEventNoArgs;
     public EventBinding() { }
 

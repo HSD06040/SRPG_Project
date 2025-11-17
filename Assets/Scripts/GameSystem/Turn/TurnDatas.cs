@@ -1,5 +1,4 @@
-﻿using GameSystemEnum;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace SRPG.ActionData
 {
