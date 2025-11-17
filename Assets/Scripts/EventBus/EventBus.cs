@@ -48,8 +48,10 @@ public static class EventBus<T> where T : IEvent
 #if UNITY_EDITOR
         EventBusMonitor.OnRaise(typeof(T), @event);
 #endif
+        IEventBinding<T> eventBinding = binding;
 
-        
+        eventBinding.OnEvent?.Invoke(@event);
+        eventBinding.OnEventNoArgs?.Invoke();
     }
 
     static void Clear()

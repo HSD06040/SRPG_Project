@@ -18,7 +18,8 @@ public interface IGameUnit
 {
     Vector2Int CurPos { get; set; }
     UnitData UnitData { get; set; }
-    
+    Transform Transform { get; }
+
     void MoveVisual(Vector2Int tilePos);
 }
 
