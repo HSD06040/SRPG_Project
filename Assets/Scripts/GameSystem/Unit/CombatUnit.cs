@@ -1,4 +1,4 @@
-public class CombatUnit : UnitBase
+public class CombatUnit : BaseUnit
 {
 
 }

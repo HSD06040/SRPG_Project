@@ -11,7 +11,7 @@ public class GameSystemManager : MonoBehaviour
     #endregion
 
     [SerializedDictionary("ÁÂÇ¥", "À¯´Ö")]
-    private SerializedDictionary<Vector2Int, IGameUnit> unitMap;
+    private SerializedDictionary<Vector2Int, BaseUnit> unitMap;
 
     private void Awake()
     {
@@ -28,7 +28,7 @@ public class GameSystemManager : MonoBehaviour
     [ContextMenu("Map G")]
     private void MapG()
     {
-        mapSystem.MapGenerate(data);
+        //mapSystem.MapGenerate(data);
     }
     #endregion
 

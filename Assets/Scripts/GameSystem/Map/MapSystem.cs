@@ -2,15 +2,33 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [Serializable]
 public class MapSystem : IDisposable
 {
-    readonly Dictionary<IGameUnit, List<ITile>> moveableTileCache = new();
+    readonly Dictionary<BaseUnit, List<Tile>> moveableTileCache = new();
 
     #region Events
     readonly EventBinding<UnitMoveCommittedEvent> commitBinding;
     readonly EventBinding<UnitSelectEvent> selectBinding;
+    #endregion
+
+    [SerializedDictionary("좌표", "타일")]
+    readonly SerializedDictionary<Vector2Int, Tile> tileMap = new();
+
+    public MapSystem()
+    {
+        commitBinding = new EventBinding<UnitMoveCommittedEvent>();
+        selectBinding = new EventBinding<UnitSelectEvent>();
+
+        EventBinding();
+    }
+    
+    public void RegisterTile(Vector2Int pos, Tile tile)
+    {
+        tileMap[pos] = tile;
+    }
 
     private void EventBinding()
     {
@@ -21,55 +39,14 @@ public class MapSystem : IDisposable
         EventBus<UnitSelectEvent>.Register(selectBinding);
     }
 
-    private void VisibleTile(UnitSelectEvent unitSelectEvent)
+    public List<Tile> GetMoveableTiles(BaseUnit unit)
     {
-        VisibleTile(unitSelectEvent.Unit);
-    }
-    #endregion
-
-    [SerializedDictionary("좌표", "타일")]
-    readonly SerializedDictionary<Vector2Int, ITile> tileMap = new();
-
-    public MapSystem()
-    {
-        commitBinding = new EventBinding<UnitMoveCommittedEvent>();
-        selectBinding = new EventBinding<UnitSelectEvent>();
-
-        EventBinding();
-    }
-
-    public void MapGenerate(MapData mapData)
-    {
-        Transform tileParent = new GameObject("MapTiles").transform;
-        GameObject tilePrefab = Resources.Load<GameObject>("Tile");
-
-        int col = mapData.MapSize.x;
-        int row = mapData.MapSize.y;
-
-        for (int y = 1; y <= col; y++)
-        {
-            for (int x = 1; x <= row; x++)
-            {
-                Vector2Int tilePos = new Vector2Int(y, x);
-
-                ITile tile = UnityEngine.Object.Instantiate
-                    (tilePrefab, new Vector3(tilePos.x, 0, tilePos.y),
-                    Quaternion.identity, tileParent).GetComponent<ITile>();
-
-                tile.SetTilePos(tilePos);
-                tileMap.Add(tilePos, tile);
-            }
-        }
-    }
-
-    public List<ITile> GetMoveableTiles(IGameUnit unit)
-    {
-        if (moveableTileCache.TryGetValue(unit, out List<ITile> cachedTiles))
+        if (moveableTileCache.TryGetValue(unit, out List<Tile> cachedTiles))
         {
             return cachedTiles;
         }
 
-        List<ITile> calculatedTiles = CalculateMoveableTiles(unit);
+        List<Tile> calculatedTiles = CalculateMoveableTiles(unit);
 
         moveableTileCache[unit] = calculatedTiles;
 
@@ -78,23 +55,28 @@ public class MapSystem : IDisposable
 
     private void OnUnitMoveCommitted(UnitMoveCommittedEvent evt)
     {
-        IGameUnit unit = evt.ActionData.Unit;
+        BaseUnit unit = evt.MoveCommand.Unit;
         moveableTileCache[unit] = CalculateMoveableTiles(unit);
     }
 
-    public List<ITile> CalculateMoveableTiles(IGameUnit unit)
+    private void VisibleTile(UnitSelectEvent unitSelectEvent)
     {
-        if (!tileMap.TryGetValue(unit.CurPos, out ITile startTile))
+        VisibleTile(unitSelectEvent.Unit);
+    }
+
+    public List<Tile> CalculateMoveableTiles(BaseUnit unit)
+    {
+        if (!tileMap.TryGetValue(unit.CurPos, out Tile startTile))
         {
             Debug.LogError("유닛의 현재 위치에 타일이 없습니다.");
-            return new List<ITile>();
+            return new List<Tile>();
         }
 
         int movement = unit.UnitData.StatData.Movement;
-        List<ITile> moveableTiles = new List<ITile>();
+        List<Tile> moveableTiles = new List<Tile>();
 
-        Queue<(ITile tile, int distance)> queue = new();
-        Dictionary<ITile, int> visited = new();
+        Queue<(Tile tile, int distance)> queue = new();
+        Dictionary<Tile, int> visited = new();
 
         queue.Enqueue((startTile, 0));
         visited.Add(startTile, 0);
@@ -116,7 +98,7 @@ public class MapSystem : IDisposable
 
             foreach (Vector2Int neighborPos in neighbors)
             {
-                if (tileMap.TryGetValue(neighborPos, out ITile neighborTile))
+                if (tileMap.TryGetValue(neighborPos, out Tile neighborTile))
                 {
                     if (visited.ContainsKey(neighborTile) || !CanMoveTo(neighborTile, unit))
                     {
@@ -138,16 +120,16 @@ public class MapSystem : IDisposable
         return moveableTiles;
     }
 
-    public void VisibleTile(IGameUnit unit)
+    public void VisibleTile(BaseUnit unit)
     {
         EventBus<TileHighlightClearEvent>.Raise(new TileHighlightClearEvent());
 
-        List<ITile> tiles = GetMoveableTiles(unit);
+        List<Tile> tiles = GetMoveableTiles(unit);
 
         EventBus<TileHighlightRequestedEvent>.Raise(new TileHighlightRequestedEvent(tiles));
     }
 
-    private bool CanMoveTo(ITile tile, IGameUnit unit)
+    private bool CanMoveTo(Tile tile, BaseUnit unit)
     {
         if (tile.Data.isWall)
             return false;

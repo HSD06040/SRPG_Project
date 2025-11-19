@@ -1,4 +1,4 @@
-﻿using SRPG.ActionData;
+﻿using SRPG.Command;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,60 +6,61 @@ using UnityEngine;
 public class GameSystem : IDisposable
 {
     private readonly MapSystem mapSystem;
-    private readonly EventBinding<UnitMoveRequestedEvent> moveRequestedBinding;
+    public BaseUnit SelectedUnit { get; private set; }
+    public Tile SelectedTile { get; private set; }
+
+    readonly EventBinding<TileSelectEvent> tileSelectBinding;
+    readonly EventBinding<UnitSelectEvent> unitSelectBinding;
 
     public GameSystem(MapSystem mapSystem)
     {
         this.mapSystem = mapSystem;
 
-        moveRequestedBinding = new EventBinding<UnitMoveRequestedEvent>();
+        tileSelectBinding = new EventBinding<TileSelectEvent>();
+        unitSelectBinding = new EventBinding<UnitSelectEvent>();
+
         EventBinding();
     }
 
     private void EventBinding()
     {
-        moveRequestedBinding.Add(OnMoveRequested);
-        EventBus<UnitMoveRequestedEvent>.Register(moveRequestedBinding);
+        tileSelectBinding.Add(OnTileSelected);
+        EventBus<TileSelectEvent>.Register(tileSelectBinding);
+
+        unitSelectBinding.Add(OnUnitSelected);
+        EventBus<UnitSelectEvent>.Register(unitSelectBinding);
     }
 
-    private void OnMoveRequested(UnitMoveRequestedEvent moveEvent)
+    private void OnTileSelected(TileSelectEvent evt)
     {
-        var unitToMove = moveEvent.UnitToMove;
-        var targetTile = moveEvent.TargetTile;
+        SelectedTile = evt.Tile;
 
-        if (unitToMove == null || targetTile == null || !IsValidMove(unitToMove, targetTile))
-        {
-            Debug.LogWarning("Invalid move request or unit/tile is null.");
-            return;
-        }
+        if (SelectedUnit == null) return;
 
-        var actionData = ExecuteMove(unitToMove, targetTile);
+        List<Tile> moveableTiles = mapSystem.GetMoveableTiles(SelectedUnit);
+        if (!moveableTiles.Contains(evt.Tile)) return;
 
-        EventBus<UnitMoveCommittedEvent>.Raise(new UnitMoveCommittedEvent(actionData));
+        MoveUnitCommand moveCommand = new MoveUnitCommand(SelectedUnit, evt.Tile);
+        moveCommand.Execute();
+
+        EventBus<UnitMoveCommittedEvent>.Raise(new UnitMoveCommittedEvent(moveCommand));
     }
 
-    /// <summary>
-    /// 실제 게임 상태를 변경하고 ActionData를 생성합니다.
-    /// </summary>
-    private MoveActionData ExecuteMove(IGameUnit unit, Tile tile)
+    private void OnUnitSelected(UnitSelectEvent evt)
     {
-        Vector2Int before = unit.CurPos;
-        Vector2Int after = tile.Pos;
-
-        unit.CurPos = after;
-
-        return new MoveActionData(unit, before, after);
+        SelectedUnit = evt.Unit;
     }
 
-    private bool IsValidMove(IGameUnit unit, Tile tile)
+    private bool IsValidMove(BaseUnit unit, Tile tile)
     {
-        List<ITile> moveableTiles = mapSystem.CalculateMoveableTiles(unit);
+        List<Tile> moveableTiles = mapSystem.CalculateMoveableTiles(unit);
 
         return moveableTiles.Contains(tile);
     }
 
     public void Dispose()
     {
-        EventBus<UnitMoveRequestedEvent>.Deregister(moveRequestedBinding);
+        EventBus<TileSelectEvent>.Deregister(tileSelectBinding);
+        EventBus<UnitSelectEvent>.Deregister(unitSelectBinding);
     }
 }

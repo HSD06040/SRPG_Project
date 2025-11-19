@@ -1,42 +1,26 @@
 ﻿using UnityEngine;
 
-namespace SRPG.ActionData
+namespace SRPG.Command
 {
-    public struct MoveActionData : IUndoableAction
+    public struct MoveUnitCommand : ICommand
     {
-        public IGameUnit Unit;
-        public Vector2Int BeforePos;
-        public Vector2Int AfterPos;
+        public BaseUnit Unit { get; }
+        public Tile TargetTile { get; }
 
-        public MoveActionData(IGameUnit unit, Vector2Int beforePos, Vector2Int afterPos)
+        public MoveUnitCommand(BaseUnit unit, Tile targetTile)
         {
-            this.Unit = unit;
-            this.BeforePos = beforePos;
-            this.AfterPos = afterPos;
+            Unit = unit;
+            TargetTile = targetTile;
+        }
+
+        public void Execute()
+        {
+            
         }
 
         public void Undo()
         {
-            Unit.CurPos = BeforePos;
-        }
-    }
-
-    public struct AttackActionData : IUndoableAction
-    {
-        public IGameUnit Attacker;
-        public IGameUnit Target;
-        public int DamageDone;
-
-        public AttackActionData(IGameUnit attacker, IGameUnit target, int damageDone)
-        {
-            this.Attacker = attacker;
-            this.Target = target;
-            this.DamageDone = damageDone;
-        }
-
-        public void Undo()
-        {
-            //target.HP += damageDone;
+            
         }
     }
 }

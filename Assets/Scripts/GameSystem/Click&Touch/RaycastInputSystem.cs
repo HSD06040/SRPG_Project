@@ -38,11 +38,11 @@ public class RaycastInputSystem : MonoBehaviour
 
     void Hit(RaycastHit hit)
     {
-        if (hit.collider.TryGetComponent<IGameUnit>(out IGameUnit unit))
+        if (hit.collider.TryGetComponent<BaseUnit>(out BaseUnit unit))
         {
             EventBus<UnitSelectEvent>.Raise(new UnitSelectEvent(unit));
         }
-        else if (hit.collider.TryGetComponent<ITile>(out ITile tile))
+        else if (hit.collider.TryGetComponent<Tile>(out Tile tile))
         {
             EventBus<TileSelectEvent>.Raise(new TileSelectEvent(tile));
         }

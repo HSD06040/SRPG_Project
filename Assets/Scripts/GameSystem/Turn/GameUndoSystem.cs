@@ -1,11 +1,14 @@
-﻿using System;
+﻿using SRPG.Command;
+using System;
 using System.Collections.Generic;
 
 public class GameUndoSystem : IDisposable
 {
-    Stack<IUndoableAction> turnActions = new Stack<IUndoableAction>();
+    readonly Stack<ICommand> commandStack = new Stack<ICommand>();
 
-    private readonly EventBinding<UnitMoveCommittedEvent> commitBinding;
+    readonly EventBinding<UnitMoveCommittedEvent> commitBinding;
+
+    MoveUnitCommand moveUnitCommand;
 
     public GameUndoSystem()
     {
@@ -14,30 +17,35 @@ public class GameUndoSystem : IDisposable
         EventBus<UnitMoveCommittedEvent>.Register(commitBinding);
     }
 
-    public void Push(IUndoableAction action)
-    {
-        turnActions.Push(action);
-    }
-
     private void OnMoveCommitted(UnitMoveCommittedEvent evt)
     {
-        Push(evt.ActionData);
+        moveUnitCommand = evt.MoveCommand;
+    }
+
+    private void PushAll()
+    {
+        Push(moveUnitCommand);
+    }
+
+    private void Push(ICommand command)
+    {
+        commandStack.Push(command);
     }
 
     public void Undo(int count)
     {
         for (int i = 0; i < count; i++)
         {
-            if (turnActions.TryPop(out IUndoableAction action))
+            if (commandStack.TryPop(out ICommand action))
                 action.Undo();
         }
     }
 
     public void UndoAll()
     {
-        for (int i = 0; i < turnActions.Count; i++)
+        for (int i = 0; i < commandStack.Count; i++)
         {
-            if (turnActions.TryPop(out IUndoableAction action))
+            if (commandStack.TryPop(out ICommand action))
             {
                 action.Undo();
             }

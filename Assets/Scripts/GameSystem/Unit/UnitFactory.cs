@@ -27,6 +27,6 @@ public class UnitFactory : MonoBehaviour, IUnitFactory
 
     public void Create(GameObject unitPrefab, Vector3 pos)
     {
-        UnitBase unit = Instantiate(unitPrefab, pos, Quaternion.identity).GetComponent<UnitBase>();
+        BaseUnit unit = Instantiate(unitPrefab, pos, Quaternion.identity).GetComponent<BaseUnit>();
     }
 }

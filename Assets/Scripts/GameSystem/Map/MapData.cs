@@ -10,4 +10,6 @@ public struct MapData
     public Vector2Int MapStartPoint;
     public Vector2 MapOffset;
     public Vector2 TileScale;
+
+    public int MapTotalSize => MapSize.x * MapSize.y;
 }
