@@ -1,0 +1,4 @@
+@startuml
+class Util <<static>> {
+}
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+class TileData {
+    + isWall : bool <<get>> <<set>>
+    + isWakable : bool <<get>> <<set>> = true
+}
+@enduml

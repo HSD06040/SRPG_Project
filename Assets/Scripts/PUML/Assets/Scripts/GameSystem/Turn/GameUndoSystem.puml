@@ -1,0 +1,9 @@
+@startuml
+class GameUndoSystem {
+    + GameUndoSystem()
+    + Undo(count:int) : void
+    + UndoAll() : void
+    + Dispose() : void
+}
+IDisposable <|-- GameUndoSystem
+@enduml

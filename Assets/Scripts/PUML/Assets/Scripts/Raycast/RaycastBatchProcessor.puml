@@ -1,0 +1,8 @@
+@startuml
+class RaycastBatchProcessor {
+    + PreformRaycasts(origins:Vector3[], driections:Vector3[], layerMask:int, hitBackfaces:bool, hitTriggers:bool, hitMultiFace:bool, ccallback:Action<RaycastHit[]>) : void
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<RaycastBatchProcessor>" <|-- RaycastBatchProcessor
+@enduml

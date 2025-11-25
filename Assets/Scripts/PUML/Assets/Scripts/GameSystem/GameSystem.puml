@@ -1,0 +1,9 @@
+@startuml
+class GameSystem {
+    + GameSystem(mapSystem:MapSystem)
+    + Dispose() : void
+}
+IDisposable <|-- GameSystem
+GameSystem --> "SelectedUnit" BaseUnit
+GameSystem --> "SelectedTile" Tile
+@enduml

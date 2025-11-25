@@ -1,0 +1,6 @@
+@startuml
+interface IHighlight {
+}
+interface ICommand {
+}
+@enduml

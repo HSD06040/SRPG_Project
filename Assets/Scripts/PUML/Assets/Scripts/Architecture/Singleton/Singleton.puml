@@ -1,0 +1,9 @@
+@startuml
+class "Singleton`1"<T> {
+    + {static} HasInstance : bool <<get>>
+    + {static} TryGetInstance() : T
+    + {static} Current : T <<get>>
+    + {static} Instance : T <<get>>
+}
+MonoBehaviour <|-- "Singleton`1"
+@enduml

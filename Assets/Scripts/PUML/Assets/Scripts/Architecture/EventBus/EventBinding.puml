@@ -1,0 +1,19 @@
+@startuml
+interface "IEventBinding`1"<T> {
+}
+class "EventBinding`1"<T> {
+    + EventBinding(onEvent:Action<T>)
+    + EventBinding(onEventNoArgs:Action)
+    + EventBinding()
+    + Add(onEvent:Action) : void
+    + Remove(onEvent:Action) : void
+    + Add(onEvent:Action<T>) : void
+    + Remove(onEvent:Action<T>) : void
+    + GetAllDelegates() : IEnumerable<Delegate>
+}
+class "Action`1"<T> {
+}
+"IEventBinding`1" --> "OnEvent<T>" "Action`1"
+"IEventBinding`1" --> "OnEventNoArgs" Action
+"IEventBinding`1" "<T>" <|-- "EventBinding`1"
+@enduml

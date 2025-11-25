@@ -1,0 +1,15 @@
+@startuml
+class BindingFrom {
+    + BindingFrom(container:DiContainer, type:Type)
+    + AsSingle() : BindingFrom
+    + AsTransient() : BindingFrom
+    + To() : BindingFrom
+    + DontDestory() : BindingFrom
+    + WithArguments(param:T) : BindingFrom
+    + WithArguments(param1:TParam1, param2:TParam2) : BindingFrom
+    + WithArguments(param1:TParam1, param2:TParam2, param3:TParam3) : BindingFrom
+    + WithArguments(param1:TParam1, param2:TParam2, param3:TParam3, param4:TParam4) : BindingFrom
+    + WithArguments(param1:TParam1, param2:TParam2, param3:TParam3, param4:TParam4, param5:TParam5) : BindingFrom
+    + WithArguments(param1:TParam1, param2:TParam2, param3:TParam3, param4:TParam4, param5:TParam5, param6:TParam6) : BindingFrom
+}
+@enduml

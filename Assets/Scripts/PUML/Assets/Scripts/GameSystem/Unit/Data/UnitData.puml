@@ -1,0 +1,8 @@
+@startuml
+class UnitData {
+    + Level : int <<get>>
+    + isFly : bool <<get>>
+}
+UnitData --> "StatData" StatData
+UnitData --> "AbilityData" AbilityData
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+class GameCoreSystem {
+    + GameCoreSystem()
+}
+GameCoreSystem --> "SelectedUnit" BaseUnit
+GameCoreSystem --> "SelectedTile" Tile
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+enum ScopeTypes {
+    Unset,
+    Transient,
+    Singleton,
+}
+class BindInfo {
+    + DontDestory : bool
+    + BindInfo()
+}
+class "List`1"<T> {
+}
+BindInfo --> "Scope" ScopeTypes
+BindInfo --> "ContractType" Type
+BindInfo --> "ToType" Type
+BindInfo --> "Arguments<TypeValuePair>" "List`1"
+@enduml

@@ -1,0 +1,8 @@
+@startuml
+abstract class InstallerBase {
+    + Binding() : void
+    + {abstract} InstallBindings() : void
+}
+MonoBehaviour <|-- InstallerBase
+IInstaller <|-- InstallerBase
+@enduml

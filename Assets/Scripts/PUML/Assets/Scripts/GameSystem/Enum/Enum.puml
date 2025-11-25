@@ -1,0 +1,8 @@
+@startuml
+enum ActionType {
+    Wait,
+    Attack,
+    Ability,
+    ItemUse,
+}
+@enduml

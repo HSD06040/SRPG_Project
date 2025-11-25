@@ -1,0 +1,11 @@
+@startuml
+struct TileHighlightRequestedEvent <<record>> {
+}
+struct TileHighlightClearEvent {
+}
+class "List`1"<T> {
+}
+IEvent <|-- TileHighlightRequestedEvent
+TileHighlightRequestedEvent --> "TilesToHighlight<Tile>" "List`1"
+IEvent <|-- TileHighlightClearEvent
+@enduml

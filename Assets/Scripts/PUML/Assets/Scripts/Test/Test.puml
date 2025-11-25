@@ -1,0 +1,9 @@
+@startuml
+class Test {
+    + Init(context:Context) : void
+}
+class "SerializedDictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- Test
+Test o-> "keyValuePairs<string,int>" "SerializedDictionary`2"
+@enduml

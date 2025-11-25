@@ -1,0 +1,11 @@
+@startuml
+class DiContainer {
+    + Bind() : BindingFrom
+    + RegisterBindings() : void
+    + Resolve(contractType:Type) : object
+    + ReBinding(bindingFrom:BindInfo) : void
+    + Binding() : void
+    + Register(instance:T) : void
+    + Inject(instance:object) : void
+}
+@enduml

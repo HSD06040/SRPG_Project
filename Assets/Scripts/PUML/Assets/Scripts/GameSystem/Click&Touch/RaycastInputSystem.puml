@@ -1,0 +1,7 @@
+@startuml
+class RaycastInputSystem {
+    + OnPoint(value:InputValue) : void
+    + OnClick(value:InputValue) : void
+}
+MonoBehaviour <|-- RaycastInputSystem
+@enduml

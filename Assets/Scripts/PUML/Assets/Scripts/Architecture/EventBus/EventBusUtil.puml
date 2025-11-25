@@ -1,0 +1,10 @@
+@startuml
+class EventBusUtil <<static>> {
+    + {static} Initialize() : void
+    + {static} ClearAllBuses() : void
+}
+class "IReadOnlyList`1"<T> {
+}
+EventBusUtil --> "EventTypes<Type>" "IReadOnlyList`1"
+EventBusUtil --> "EventBusTypes<Type>" "IReadOnlyList`1"
+@enduml

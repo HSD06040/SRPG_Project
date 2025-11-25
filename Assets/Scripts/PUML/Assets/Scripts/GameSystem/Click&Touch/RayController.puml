@@ -1,0 +1,16 @@
+@startuml
+struct RayControllerData <<record>> {
+    + maxDistance : float <<get>> <<init>>
+}
+abstract class RayController {
+    + RayController(data:RayControllerData)
+    + {abstract} Cast(screenPosition:Vector2) : void
+}
+class "Action`1"<T> {
+}
+RayControllerData --> "cam" Camera
+RayControllerData --> "hitAction<RaycastHit>" "Action`1"
+RayControllerData --> "filterMask" LayerMask
+RayControllerData --> "triggerInteraction" QueryTriggerInteraction
+RayControllerData --> "cancelAction" Action
+@enduml

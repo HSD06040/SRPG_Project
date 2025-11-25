@@ -1,0 +1,8 @@
+@startuml
+interface IEvent {
+}
+struct TestEvent {
+}
+IEvent <|-- TestEvent
+TestEvent --> "UnitData" UnitData
+@enduml

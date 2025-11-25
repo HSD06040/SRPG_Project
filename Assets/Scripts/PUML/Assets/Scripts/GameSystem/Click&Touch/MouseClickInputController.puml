@@ -1,0 +1,7 @@
+@startuml
+class MouseClickInputController {
+    + MouseClickInputController(data:RayControllerData)
+    + <<override>> Cast(screenPosition:Vector2) : void
+}
+RayController <|-- MouseClickInputController
+@enduml

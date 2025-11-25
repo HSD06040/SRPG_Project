@@ -1,0 +1,11 @@
+@startuml
+struct MapData {
+    + Name : string
+    + MapScale : float
+    + MapTotalSize : int <<get>>
+}
+MapData --> "MapSize" Vector2Int
+MapData --> "MapStartPoint" Vector2Int
+MapData --> "MapOffset" Vector2
+MapData --> "TileScale" Vector2
+@enduml

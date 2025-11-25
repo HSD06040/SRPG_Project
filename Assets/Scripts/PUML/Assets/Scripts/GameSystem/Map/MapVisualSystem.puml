@@ -1,0 +1,8 @@
+@startuml
+class MapVisualSystem {
+    + MapVisualSystem()
+    + OnHighlightRequest(evt:TileHighlightRequestedEvent) : void
+    + Dispose() : void
+}
+IDisposable <|-- MapVisualSystem
+@enduml

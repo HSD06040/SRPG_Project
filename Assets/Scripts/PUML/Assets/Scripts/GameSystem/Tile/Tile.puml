@@ -1,0 +1,11 @@
+@startuml
+class Tile {
+    + Init(pos:Vector2Int, data:TileData) : void
+    + HighlightTile() : void
+    + DeHighlightTile() : void
+}
+MonoBehaviour <|-- Tile
+IHighlight <|-- Tile
+Tile --> "Pos" Vector2Int
+Tile --> "Data" TileData
+@enduml

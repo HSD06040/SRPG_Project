@@ -2,5 +2,5 @@
 
 public class MapDataSO : ScriptableObject
 {
-    public MapData MapData;
+    public MapData MapData;    
 }

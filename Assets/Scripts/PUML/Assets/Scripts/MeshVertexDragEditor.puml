@@ -1,0 +1,11 @@
+@startuml
+class MeshVertexDragEditor {
+    + enableEditing : bool = true
+    + MoveSelectedVertex(worldPosition:Vector3) : void
+    + GetVertexAtWorldPoint(worldPos:Vector3) : int
+    + ResetMesh() : void
+    + SelectedVertexIndex : int <<get>>
+    + SetSelectedVertex(index:int) : void
+}
+MonoBehaviour <|-- MeshVertexDragEditor
+@enduml

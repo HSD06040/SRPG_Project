@@ -1,0 +1,7 @@
+@startuml
+class MobileTouchInputController {
+    + MobileTouchInputController(data:RayControllerData)
+    + <<override>> Cast(screenPosition:Vector2) : void
+}
+RayController <|-- MobileTouchInputController
+@enduml

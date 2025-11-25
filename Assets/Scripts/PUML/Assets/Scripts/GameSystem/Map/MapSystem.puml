@@ -1,0 +1,11 @@
+@startuml
+class MapSystem {
+    + MapSystem()
+    + RegisterTile(pos:Vector2Int, tile:Tile) : void
+    + GetMoveableTiles(unit:BaseUnit) : List<Tile>
+    + CalculateMoveableTiles(unit:BaseUnit) : List<Tile>
+    + VisibleTile(unit:BaseUnit) : void
+    + Dispose() : void
+}
+IDisposable <|-- MapSystem
+@enduml

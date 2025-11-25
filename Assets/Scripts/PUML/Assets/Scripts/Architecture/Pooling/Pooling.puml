@@ -1,0 +1,19 @@
+@startuml
+class Pooling <<static>> {
+    + {static} Get(instance:T) : T
+}
+struct "PoolChain`1"<T> {
+    + PoolChain()
+    + SetLifeTime(lifeTime:float) : PoolChain<T>
+    + SetMaxSize(size:int) : PoolChain<T>
+}
+struct "PoolInfo`1"<T> {
+    + lifeTime : float
+    + autoRelease : bool
+    + customPoolSize : int
+    + Creation() : void
+}
+class "ObjectPool`1"<T> {
+}
+"PoolInfo`1" --> "pool<T>" "ObjectPool`1"
+@enduml

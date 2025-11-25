@@ -1,0 +1,11 @@
+@startuml
+class StatData {
+    + Speed : int
+    + PhysicalPower : float
+    + MagicPower : float
+    + PhysicalDefense : float
+    + MagicResistance : float
+    + Movement : int
+    + Evasion : float
+}
+@enduml

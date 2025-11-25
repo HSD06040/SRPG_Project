@@ -1,0 +1,8 @@
+@startuml
+class "EventBus`1"<T> <<static>> {
+    + {static} Register(binding:EventBinding<T>) : void
+    + {static} Deregister(binding:EventBinding<T>) : void
+    + {static} Raise(@event:T) : void
+    + {static} Raise(binding:EventBinding<T>, @event:T) : void
+}
+@enduml

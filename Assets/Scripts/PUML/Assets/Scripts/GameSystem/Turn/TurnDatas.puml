@@ -1,0 +1,10 @@
+@startuml
+struct MoveUnitCommand {
+    + MoveUnitCommand(unit:BaseUnit, targetTile:Tile)
+    + Execute() : void
+    + Undo() : void
+}
+ICommand <|-- MoveUnitCommand
+MoveUnitCommand --> "Unit" BaseUnit
+MoveUnitCommand --> "TargetTile" Tile
+@enduml

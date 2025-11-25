@@ -1,0 +1,18 @@
+@startuml
+struct UnitEvent <<record>> {
+}
+struct UnitMoveRequestedEvent <<record>> {
+}
+struct UnitMoveCommittedEvent <<record>> {
+}
+struct UnitActionEndedEvent <<record>> {
+}
+IEvent <|-- UnitEvent
+UnitEvent --> "Unit" BaseUnit
+IEvent <|-- UnitMoveRequestedEvent
+UnitMoveRequestedEvent --> "UnitToMove" BaseUnit
+UnitMoveRequestedEvent --> "TargetTile" Tile
+IEvent <|-- UnitMoveCommittedEvent
+UnitMoveCommittedEvent --> "MoveCommand" MoveUnitCommand
+IEvent <|-- UnitActionEndedEvent
+@enduml

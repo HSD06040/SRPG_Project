@@ -1,0 +1,6 @@
+@startuml
+class Installer {
+    + <<override>> InstallBindings() : void
+}
+InstallerBase <|-- Installer
+@enduml

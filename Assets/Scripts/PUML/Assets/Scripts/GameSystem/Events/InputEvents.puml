@@ -1,0 +1,10 @@
+@startuml
+struct UnitSelectEvent <<record>> {
+}
+struct TileSelectEvent <<record>> {
+}
+IEvent <|-- UnitSelectEvent
+UnitSelectEvent --> "Unit" BaseUnit
+IEvent <|-- TileSelectEvent
+TileSelectEvent --> "Tile" Tile
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+class PredefinedAssemblyUtil <<static>> {
+    + {static} GetTypes(interfaceType:Type) : List<Type>
+}
+enum AssemblyType {
+    AssemblyCSharp,
+    AssemblyCSharpEditor,
+    AssemblyCSharpEditorFirstPass,
+    AssemblyCSharpFirstPass,
+}
+PredefinedAssemblyUtil +-- AssemblyType
+@enduml

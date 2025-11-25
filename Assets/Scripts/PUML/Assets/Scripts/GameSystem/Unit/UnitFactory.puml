@@ -1,0 +1,9 @@
+@startuml
+interface IUnitFactory {
+}
+class UnitFactory {
+    + Create(unitPrefab:GameObject, pos:Vector3) : void
+}
+MonoBehaviour <|-- UnitFactory
+IUnitFactory <|-- UnitFactory
+@enduml

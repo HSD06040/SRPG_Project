@@ -1,0 +1,14 @@
+@startuml
+abstract class BaseUnit {
+    + MoveVisual(tilePos:Vector2Int) : void
+    + HighlightTile() : void
+    + DeHighlightTile() : void
+}
+class "EventBinding`1"<T> {
+}
+MonoBehaviour <|-- BaseUnit
+IHighlight <|-- BaseUnit
+BaseUnit --> "CurPos" Vector2Int
+BaseUnit --> "UnitData" UnitData
+BaseUnit o-> "UnitEvent<UnitEvent>" "EventBinding`1"
+@enduml

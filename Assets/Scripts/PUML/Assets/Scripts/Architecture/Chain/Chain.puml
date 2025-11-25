@@ -1,0 +1,65 @@
+@startuml
+interface "IProcessor`2"<in TIn,out TOut> {
+}
+class ThresholdFilter {
+    + ThresholdFilter(getThreshold:Func<float>)
+    + Process(score:float) : bool
+}
+class DistanceScorer {
+    + Process(distance:float) : float
+}
+class DistanceFromPlayer {
+    + DistanceFromPlayer(player:Transform)
+    + Process(point:Vector3) : float
+}
+class ClampByMaxDistance {
+    + ClampByMaxDistance(maxDistance:float)
+    + Process(score:float) : float
+}
+class HighlightIfClose {
+    + HighlightIfClose(target:Transform)
+    + Process(isCloseEnough:bool) : bool
+}
+class "Combined`3"<A,B,C> {
+    + Combined(first:IProcessor<A, B>, second:IProcessor<B, C>)
+    + Process(input:A) : C
+}
+class "Chain`2"<TIn,TOut> {
+    + {static} Start(processor:IProcessor<TIn, TOut>) : Chain<TIn, TOut>
+    + Then(next:IProcessor<TOut, TNext>) : Chain<TIn, TNext>
+    + Run(input:TIn) : TOut
+    + Compile() : ProcessorDelegate<TIn, TOut>
+}
+class Chain <<static>> {
+    + {static} FromPlayer(player:Transform) : DistanceChain
+    + {static} Start(processor:DistanceFromPlayer) : DistanceChain
+}
+abstract class "FluentChain`3"<TIn,TOut,TDerived> {
+    + Run(input:TIn) : TOut
+    + Compile() : ProcessorDelegate<TIn, TOut>
+}
+class DistanceChain {
+    + DistanceChain(processor:IProcessor<Vector3, float>)
+    + Then(scorer:TProcessor) : ScoredChain
+}
+class ScoredChain {
+    + ScoredChain(processor:IProcessor<Vector3, float>)
+    + WithMaxDistance(maxDist:float) : ScoredChain
+    + Then(filter:TProcessor) : FilteredChain
+}
+class FilteredChain {
+    + FilteredChain(processor:IProcessor<Vector3, bool>)
+    + LogTo(system:string) : FilteredChain
+    + Then(next:TProcessor) : FilteredChain
+}
+"IProcessor`2" "<float,bool>" <|-- ThresholdFilter
+"IProcessor`2" "<float,float>" <|-- DistanceScorer
+"IProcessor`2" "<Vector3,float>" <|-- DistanceFromPlayer
+"IProcessor`2" "<float,float>" <|-- ClampByMaxDistance
+"IProcessor`2" "<bool,bool>" <|-- HighlightIfClose
+"IProcessor`2" "<A,C>" <|-- "Combined`3"
+"FluentChain`3" --> "processor<TIn,TOut>" "IProcessor`2"
+"FluentChain`3" "<Vector3,float,DistanceChain>" <|-- DistanceChain
+"FluentChain`3" "<Vector3,float,ScoredChain>" <|-- ScoredChain
+"FluentChain`3" "<Vector3,bool,FilteredChain>" <|-- FilteredChain
+@enduml
