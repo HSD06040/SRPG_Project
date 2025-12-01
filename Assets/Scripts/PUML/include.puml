@@ -1,12 +1,9 @@
 @startuml
 !include .\\.\Assets\Scripts\MeshVertexDragEditor.puml
-!include .\\.\Assets\Scripts\Editor\MeshVertexDragEditorInspector.puml
 !include .\\.\Assets\Scripts\GameSystem\GameCoreSystem.puml
 !include .\\.\Assets\Scripts\GameSystem\GameSystem.puml
 !include .\\.\Assets\Scripts\GameSystem\GameSystemManager.puml
 !include .\\.\Assets\Scripts\Raycast\RaycastBatchProcessor.puml
-!include .\\.\Assets\Scripts\Test\Test.puml
-!include .\\.\Assets\Scripts\Util\GlobalUsings.puml
 !include .\\.\Assets\Scripts\Util\Util.puml
 !include .\\.\Assets\Scripts\Architecture\Chain\Chain.puml
 !include .\\.\Assets\Scripts\Architecture\DI\Context.puml
@@ -15,7 +12,6 @@
 !include .\\.\Assets\Scripts\Architecture\EventBus\Event.puml
 !include .\\.\Assets\Scripts\Architecture\EventBus\EventBinding.puml
 !include .\\.\Assets\Scripts\Architecture\EventBus\EventBus.puml
-!include .\\.\Assets\Scripts\Architecture\EventBus\EventBusMonitor.puml
 !include .\\.\Assets\Scripts\Architecture\EventBus\EventBusUtil.puml
 !include .\\.\Assets\Scripts\Architecture\EventBus\PredefinedAssemblyUtil.puml
 !include .\\.\Assets\Scripts\Architecture\Pooling\IObjectPool.puml
@@ -26,10 +22,6 @@
 !include .\\.\Assets\Scripts\GameSystem\Click&Touch\RaycastInputSystem.puml
 !include .\\.\Assets\Scripts\GameSystem\Click&Touch\RayController.puml
 !include .\\.\Assets\Scripts\GameSystem\Enum\Enum.puml
-!include .\\.\Assets\Scripts\GameSystem\Events\GameSystemEvent.puml
-!include .\\.\Assets\Scripts\GameSystem\Events\InputEvents.puml
-!include .\\.\Assets\Scripts\GameSystem\Events\MapEvents.puml
-!include .\\.\Assets\Scripts\GameSystem\Events\UnitEvents.puml
 !include .\\.\Assets\Scripts\GameSystem\Interfaces\GameCoreSystemInterfaces.puml
 !include .\\.\Assets\Scripts\GameSystem\Map\MapData.puml
 !include .\\.\Assets\Scripts\GameSystem\Map\MapDataSO.puml
@@ -50,7 +42,6 @@
 !include .\\.\Assets\Scripts\Architecture\DI\Installer\IInstaller.puml
 !include .\\.\Assets\Scripts\Architecture\DI\Installer\Installer.puml
 !include .\\.\Assets\Scripts\Architecture\DI\Installer\InstallerBase.puml
-!include .\\.\Assets\Scripts\Architecture\EventBus\Editor\EventBusMonitorWindow.puml
 !include .\\.\Assets\Scripts\GameSystem\Unit\Data\AbilityData.puml
 !include .\\.\Assets\Scripts\GameSystem\Unit\Data\StatData.puml
 !include .\\.\Assets\Scripts\GameSystem\Unit\Data\UnitData.puml
